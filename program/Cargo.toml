@@ -1,0 +1,9 @@
+[package]
+version = "0.1.0"
+name = "prooftris-program"
+edition = "2021"
+
+[dependencies]
+sp1-zkvm = { version = "6.0.1" }
+tetris-core = { path = "../tetris-core" }
+
