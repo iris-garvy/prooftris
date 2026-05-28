@@ -271,18 +271,13 @@ impl PieceState {
 
     pub fn check_immobile(&self, board: &Board) -> bool {
         let shape = self.shape();
-        let col = self.col;
-        let row = self.row;
-        if board.no_collision(&shape, row + 1, col) {
-            return false;
-        } else if board.no_collision(&shape, row - 1, col) {
-            return false;
-        } else if board.no_collision(&shape, row, col + 1) {
-            return false;
-        } else if board.no_collision(&shape, row, col - 1) {
-            return false;
-        }
-        true
+        let (row, col) = (self.row, self.col);
+
+        !( board.no_collision(&shape, row + 1, col) 
+            || board.no_collision(&shape, row - 1, col) 
+            || board.no_collision(&shape, row, col + 1) 
+            || board.no_collision(&shape, row, col - 1) 
+        )
     }
 
     pub fn three_corners(&self, board: &Board) -> bool {
@@ -317,7 +312,7 @@ pub struct Ledger {
 }
 
 impl Ledger {
-    pub fn new() -> Self {
+    pub fn empty() -> Self {
         Ledger {
             tsd: 0,
             tst: 0,
@@ -325,6 +320,24 @@ impl Ledger {
             tetris: 0,
             pc: 0,
         }
+    }
+
+    pub fn new(array: &[u32; 5]) -> Self {
+        Ledger {
+            tsd: array[0],
+            tst: array[1],
+            tss: array[2],
+            tetris: array[3],
+            pc: array[4],
+        }
+    }
+
+    pub fn pass_requirements(&self, requirements: &Ledger) -> bool {
+        self.tsd >= requirements.tsd
+            && self.tst >= requirements.tst
+            && self.tss >= requirements.tss
+            && self.tetris >= requirements.tetris
+            && self.pc >= requirements.pc
     }
 }
 

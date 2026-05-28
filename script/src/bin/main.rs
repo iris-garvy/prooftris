@@ -46,6 +46,7 @@ fn main() {
 
     let initial_board = Board::new();
     let pieces = vec![Piece::O, Piece::I, Piece::I, Piece::O, Piece::O];
+    let requirements = Ledger::new(&[0,0,0,0,1]);
 
     let actions = vec![
         vec![
@@ -77,6 +78,7 @@ fn main() {
     let mut stdin = SP1Stdin::new();
     stdin.write(&initial_board);
     stdin.write(&pieces);
+    stdin.write(&requirements);
     stdin.write(&actions);
 
     if args.execute {
@@ -85,8 +87,8 @@ fn main() {
         println!("Program executed successfully.");
 
         // Read the output.
-        let ledger: Ledger = output.read();
-        println!("Public ledger: {:?}", ledger);
+        let validity: bool = output.read();
+        println!("Passes requirements: {:?}", validity);
         println!("Number of cycles: {}", report.total_instruction_count());
     } else {
         // Setup the program for proving.
