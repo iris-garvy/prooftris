@@ -137,9 +137,9 @@ impl Piece {
         match self {
             Piece::I => [
                 [0b0000, 0b1111, 0b0000, 0b0000], // 0
-                [0b1, 0b1, 0b1, 0b1],             // 1
+                [0b100, 0b100, 0b100, 0b100],     // 1
                 [0b0000, 0b0000, 0b1111, 0b0000], // 2
-                [0b1, 0b1, 0b1, 0b1],             // 3
+                [0b10, 0b10, 0b10, 0b10],         // 3
             ],
             Piece::O => [[0b11, 0b11, 0b0000, 0b0000]; 4],
             Piece::T => [
@@ -211,7 +211,7 @@ impl PieceState {
         PieceState {
             piece,
             rotation: 0,
-            row: 0,
+            row: 5,
             col,
         }
     }
@@ -349,7 +349,6 @@ pub fn simulate(
         let mut state = PieceState::spawn(*piece);
         let mut previous_action = Action::Place;
         let mut tspin = false;
-        let mut cleared_lines = 0;
         for &action in actions {
             match action {
                 Action::ShiftLeft => {
@@ -392,7 +391,7 @@ pub fn simulate(
                         tspin = true;
                     }
                     board.place(&state);
-                    cleared_lines = board.clear_lines();
+                    let cleared_lines = board.clear_lines();
                     if cleared_lines > 0 {
                         if tspin {
                             match cleared_lines {

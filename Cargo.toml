@@ -1,5 +1,5 @@
 [workspace]
-members = ["lib", "program", "script", "tetris-core"]
+members = ["program", "script", "tetris-core", "web-player"]
 resolver = "2"
 
 [workspace.dependencies]
