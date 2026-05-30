@@ -16,31 +16,38 @@ struct TetrisCircuit {
 }
 
 struct BoardTargets{
-    cells: Vec<BoolTarget>
+    cells: [[BoolTarget;10];25]
 }
 
 impl BoardTargets{
-    fn new(builder: &mut CircuitBuilder<GoldilocksField, 2>) -> Self {
-        let mut cells = Vec::with_capacity(250);
-        for _ in 0..250 {
-            let cell = builder.add_virtual_bool_target_safe();
-            builder.assert_zero(cell.target);
-            cells.push(cell);
-        }
-        BoardTargets{cells}
-    }
-
-    fn get_index(row: usize, col: usize) -> usize {
-        row * 10 + col
+    fn empty(builder: &mut CircuitBuilder<GoldilocksField, 2>) -> Self {
+        [[builder._false();10];25]
     }
 
     fn no_collision(&self, builder:&mut CircuitBuilder<GoldilocksField, 2>, shape: [[Target;2];4], row: Target, col: Target) -> BoolTarget {
-        for p_row in 0..4{
-            let p_row = builder.constant(GoldilocksField::from_canonical_usize(p_row));
-            for p_col in 0..4{
+        let mut collision = builder._false();
+        let cells = self.cells;
+        for block in 0..4 {
+            piece_row = builder.add(row,shape[block][0]);
+            piece_col = builder.add(col,shape[block][1]);
 
+            for board_row in 0..25 {
+                for board_col in 0..10 {
+                    board_rt = builder.constant(GoldilocksField::from_canonical_usize(board_row));
+                    board_ct = builder.constant(GoldilocksField::from_canonical_usize(board_col));
+                    is_row = builder.is_equal(piece_row, board_rt);
+                    is_col = builder.is_equal(piece_col, board_ct);
+
+                    match_row = builder.and(is_row, cells[board_row][board_col]);
+                    match_col = builder.and(is_col, cells[board_row][board_col]);
+                    total_match = builder.and(match_row, match_col);
+
+                    collision = builder.and(collision, total_match);
+                    
+                }
             }
         }
+        builder.not(collision)
     }
 
 }
