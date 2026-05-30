@@ -304,9 +304,9 @@ impl PieceState {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Ledger {
+    pub tss: u32,
     pub tsd: u32,
     pub tst: u32,
-    pub tss: u32,
     pub tetris: u32,
     pub pc: u32,
 }
@@ -324,9 +324,9 @@ impl Ledger {
 
     pub fn new(array: &[u32; 5]) -> Self {
         Ledger {
-            tsd: array[0],
-            tst: array[1],
-            tss: array[2],
+            tss: array[0],
+            tsd: array[1],
+            tst: array[2],
             tetris: array[3],
             pc: array[4],
         }
