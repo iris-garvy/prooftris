@@ -258,7 +258,7 @@ impl PieceState {
 
         for &(dx, dy) in kicks.iter() {
             let new_col = self.col + dx;
-            let new_row = self.row - dy;
+            let new_row = self.row - dy; //subtracting because kick table is in opposite direction
             if board.no_collision(&new_shape, new_row, new_col) {
                 self.rotation = to;
                 self.row = new_row;
@@ -300,6 +300,9 @@ impl PieceState {
         }
         filled >= 3
     }
+
+
+    
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
